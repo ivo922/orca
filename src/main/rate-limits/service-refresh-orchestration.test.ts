@@ -177,6 +177,32 @@ describe('RateLimitService', () => {
     expect(service.getState().cursor?.status).toBe('unavailable')
   })
 
+  it('does not change cursorAuthConfigured when the cycle is aborted before the auth read settles', async () => {
+    vi.mocked(readCursorAuthSession).mockResolvedValueOnce({
+      status: 'ok',
+      accessToken: 'token',
+      source: 'cli'
+    })
+    vi.mocked(fetchCursorRateLimits).mockResolvedValueOnce(okProvider('cursor', 42))
+    vi.mocked(fetchClaudeRateLimits).mockResolvedValue(okProvider('claude', 10, Date.now()))
+    vi.mocked(fetchCodexRateLimits).mockResolvedValue(okProvider('codex', 20, Date.now()))
+    const service = new RateLimitService()
+    await service.refresh()
+    expect(service.getState().cursorAuthConfigured).toBe(true)
+
+    const cursorAuth = deferred<{ status: 'missing' }>()
+    vi.mocked(readCursorAuthSession).mockReturnValueOnce(cursorAuth.promise)
+    const refresh = service.refresh()
+    await flushMicrotasks()
+    service.stop()
+    cursorAuth.resolve({ status: 'missing' })
+    await refresh
+
+    // Why: the aborted cycle's result is discarded, so its auth read must not flip the durable flag.
+    expect(service.getState().cursorAuthConfigured).toBe(true)
+    expect(fetchCursorRateLimits).toHaveBeenCalledTimes(1)
+  })
+
   it('does not refetch Claude when a Codex account switch is queued during fetchAll', async () => {
     const service = new RateLimitService()
     const firstClaude = deferred<ProviderRateLimits>()

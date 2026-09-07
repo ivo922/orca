@@ -144,10 +144,11 @@ export abstract class RateLimitServiceFullCyclePreparation extends RateLimitServ
     // a slow disk never delays the other providers' fetches.
     const cursorResultPromise = readCursorAuthSession()
       .then((auth) => {
-        this.cursorAuthConfigured = auth.status === 'ok'
+        // Why: an aborted cycle discards its result; it must not flip the durable auth flag either.
         if (signal.aborted) {
           throw new DOMException('The operation was aborted.', 'AbortError')
         }
+        this.cursorAuthConfigured = auth.status === 'ok'
         return fetchCursorRateLimits({ signal, authReadResult: auth })
       })
       .then(

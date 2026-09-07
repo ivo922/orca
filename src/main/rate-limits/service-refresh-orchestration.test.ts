@@ -159,13 +159,15 @@ describe('RateLimitService', () => {
     const service = new RateLimitService()
 
     const refresh = service.refresh()
-    await flushMicrotasks()
+    // Why: the cycle is split across prepare/apply awaits; wait for Grok to settle instead of counting ticks.
+    await vi.waitFor(() => {
+      expect(service.getState().grok?.status).toBe('ok')
+    })
 
     expect(fetchClaudeRateLimits).toHaveBeenCalledTimes(1)
     expect(fetchGrokRateLimits).toHaveBeenCalledTimes(1)
     const pendingState = service.getState()
     expect(pendingState.claude?.status).toBe('ok')
-    expect(pendingState.grok?.status).toBe('ok')
     expect(pendingState.cursor?.status).toBe('fetching')
     expect(fetchCursorRateLimits).not.toHaveBeenCalled()
 

@@ -38,6 +38,7 @@ const mockStoreState = {
       status: 'ok'
     },
     minimaxCookieConfigured: false,
+    minimaxApiKeyConfigured: false,
     grokAuthConfigured: true,
     cursor: null,
     cursorAuthConfigured: false,

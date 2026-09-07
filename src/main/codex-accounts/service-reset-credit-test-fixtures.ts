@@ -38,6 +38,7 @@ export function createResetRateLimitState(
     grok: null,
     cursor: null,
     minimaxCookieConfigured: false,
+    minimaxApiKeyConfigured: false,
     grokAuthConfigured: false,
     cursorAuthConfigured: false,
     claudeTarget: { runtime: 'host', wslDistro: null },

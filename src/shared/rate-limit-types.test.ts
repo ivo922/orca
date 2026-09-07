@@ -18,6 +18,7 @@ describe('RateLimitState', () => {
       grok: null,
       cursor: null,
       minimaxCookieConfigured: false,
+      minimaxApiKeyConfigured: false,
       grokAuthConfigured: false,
       cursorAuthConfigured: false,
       claudeTarget: { runtime: 'host', wslDistro: null },
@@ -29,6 +30,7 @@ describe('RateLimitState', () => {
     expect(state.antigravity).toBeNull()
     expect(state.minimax).toBeNull()
     expect(state.minimaxCookieConfigured).toBe(false)
+    expect(state.minimaxApiKeyConfigured).toBe(false)
     expect(state.cursor).toBeNull()
     expect(state.cursorAuthConfigured).toBe(false)
   })

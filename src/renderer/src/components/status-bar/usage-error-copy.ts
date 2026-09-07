@@ -162,13 +162,13 @@ export function getProviderUsageErrorMessage(p: ProviderRateLimits): string {
     if (failureKind === 'missing-credentials') {
       return translate(
         'auto.components.status.bar.tooltip.cursorMissingCredentials',
-        'Sign in to Cursor from cursor-agent or the Cursor IDE, then retry usage.'
+        'Run cursor-agent login on the computer running Orca, then retry usage.'
       )
     }
     if (failureKind === 'stale-token') {
       return translate(
         'auto.components.status.bar.tooltip.cursorStaleToken',
-        'Cursor sign-in expired. Sign in again from cursor-agent or the Cursor IDE, then retry usage.'
+        'Cursor sign-in expired. Run cursor-agent login again, then retry usage.'
       )
     }
   }

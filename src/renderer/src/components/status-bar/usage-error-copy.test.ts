@@ -58,7 +58,7 @@ describe('Cursor usage error copy', () => {
 
     expect(getProviderUsageStatusLabel(p)).toBe('Sign in required')
     expect(getProviderUsageErrorMessage(p)).toBe(
-      'Sign in to Cursor from cursor-agent or the Cursor IDE, then retry usage.'
+      'Run cursor-agent login on the computer running Orca, then retry usage.'
     )
   })
 
@@ -67,7 +67,7 @@ describe('Cursor usage error copy', () => {
 
     expect(getProviderUsageStatusLabel(p)).toBe('Sign in required')
     expect(getProviderUsageErrorMessage(p)).toBe(
-      'Cursor sign-in expired. Sign in again from cursor-agent or the Cursor IDE, then retry usage.'
+      'Cursor sign-in expired. Run cursor-agent login again, then retry usage.'
     )
   })
 })

@@ -14,7 +14,7 @@ export type UsageProviderSettings = Pick<
   // requires geminiCliOAuthEnabled — the snapshot mirrors the Gemini fetch,
   // which never yields data while that opt-in is off.
   antigravityUsageConfigured: boolean
-  // Why: MiniMax/Grok/Cursor sign-in live on disk (or the Cursor IDE db), not in settings; main sets these each poll.
+  // Why: MiniMax/Grok/Cursor sign-in live on disk or in a CLI session, not in settings; main sets these each poll.
   minimaxCookieConfigured: boolean
   minimaxApiKeyConfigured: boolean
   grokAuthConfigured: boolean

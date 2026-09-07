@@ -139,7 +139,7 @@ describe('RateLimitService', () => {
 
     await service.refresh()
 
-    expect(readCursorAuthSession).toHaveBeenCalledWith({ signal: expect.any(AbortSignal) })
+    expect(readCursorAuthSession).toHaveBeenCalledTimes(1)
     expect(fetchCursorRateLimits).toHaveBeenCalledWith({
       signal: expect.any(AbortSignal),
       authReadResult

@@ -140,9 +140,9 @@ export abstract class RateLimitServiceFullCyclePreparation extends RateLimitServ
       (reason) => ({ status: 'rejected', reason }) as const
     )
     // Why: fetched in parallel with Grok — both are independent, tokenless-until-read providers with no dedicated fetch cycle.
-    // Why: the auth read is folded into this chain (rather than awaited above) so a
-    // slow `cursor-agent status` spawn never delays the other providers' fetches.
-    const cursorResultPromise = readCursorAuthSession({ signal })
+    // Why: the auth-file read is folded into this chain (rather than awaited above) so
+    // a slow disk never delays the other providers' fetches.
+    const cursorResultPromise = readCursorAuthSession()
       .then((auth) => {
         this.cursorAuthConfigured = auth.status === 'ok'
         if (signal.aborted) {

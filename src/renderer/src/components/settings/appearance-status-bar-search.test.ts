@@ -49,8 +49,8 @@ describe('getStatusBarToggles', () => {
 
     expect(cursorToggle).toMatchObject({
       title: 'Cursor Usage',
-      description: 'Show Cursor monthly plan usage from cursor-agent or Cursor IDE sign-in.',
-      toggleDescription: 'Show Cursor monthly plan usage from cursor-agent or Cursor IDE sign-in.'
+      description: 'Show Cursor monthly plan usage when signed in via cursor-agent.',
+      toggleDescription: 'Show Cursor monthly plan usage when signed in via cursor-agent.'
     })
     expect(cursorToggle?.keywords).toEqual(
       expect.arrayContaining(['status bar', 'cursor', 'usage', 'subscription'])

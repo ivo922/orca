@@ -23,12 +23,6 @@ const OK_AUTH: CursorAuthReadResult = {
   source: 'cli'
 }
 
-const OK_AUTH_IDE: CursorAuthReadResult = {
-  status: 'ok',
-  accessToken: 'cursor-access-token',
-  source: 'ide'
-}
-
 describe('fetchCursorRateLimits', () => {
   beforeEach(() => {
     netFetchMock.mockReset()
@@ -81,15 +75,6 @@ describe('fetchCursorRateLimits', () => {
         })
       })
     )
-  })
-
-  it('maps an IDE-sourced ok auth to usageMetadata.source "web" on success', async () => {
-    netFetchMock.mockResolvedValueOnce(jsonResponse({ planUsage: { totalPercentUsed: 6.1 } }))
-
-    const result = await fetchCursorRateLimits({ authReadResult: OK_AUTH_IDE })
-
-    expect(result.status).toBe('ok')
-    expect(result.usageMetadata?.source).toBe('web')
   })
 
   it('maps a CLI-sourced ok auth to usageMetadata.source "cli" on success', async () => {
@@ -159,15 +144,6 @@ describe('fetchCursorRateLimits', () => {
     expect(result.error).not.toContain('cursor-access-token')
   })
 
-  it('keeps usageMetadata.source "web" for a 401 with an IDE-sourced auth result', async () => {
-    netFetchMock.mockResolvedValueOnce(jsonResponse({}, 401))
-
-    const result = await fetchCursorRateLimits({ authReadResult: OK_AUTH_IDE })
-
-    expect(result.usageMetadata?.failureKind).toBe('stale-token')
-    expect(result.usageMetadata?.source).toBe('web')
-  })
-
   it('returns a stale-token error on 403', async () => {
     netFetchMock.mockResolvedValueOnce(jsonResponse({}, 403))
 
@@ -227,7 +203,7 @@ describe('fetchCursorRateLimits', () => {
     expect(result.usageMetadata?.source).toBe('cli')
   })
 
-  it('keeps usageMetadata.source "web" for a parse failure with an IDE-sourced auth result', async () => {
+  it('returns a parse failure when the response body is not JSON', async () => {
     netFetchMock.mockResolvedValueOnce({
       ok: true,
       status: 200,
@@ -236,10 +212,10 @@ describe('fetchCursorRateLimits', () => {
       }
     } as unknown as Response)
 
-    const result = await fetchCursorRateLimits({ authReadResult: OK_AUTH_IDE })
+    const result = await fetchCursorRateLimits({ authReadResult: OK_AUTH })
 
     expect(result.usageMetadata?.failureKind).toBe('parse')
-    expect(result.usageMetadata?.source).toBe('web')
+    expect(result.usageMetadata?.source).toBe('cli')
   })
 
   it('clamps usedPercent into the 0-100 range', async () => {

@@ -133,26 +133,15 @@ function buildBuckets(
   return buckets.length > 0 ? buckets : undefined
 }
 
-/**
- * Maps CLI/IDE auth provenance onto UsageRateLimitSource.
- * Why: UsageRateLimitSource has no `ide` value — IDE sessions map to `web`.
- */
-function toUsageMetadataSource(authSource: 'cli' | 'ide'): 'cli' | 'web' {
-  return authSource === 'ide' ? 'web' : 'cli'
-}
-
 /** Standard parse-failure Cursor rate-limit result. */
-function parseFailure(source: 'cli' | 'web'): ProviderRateLimits {
+function parseFailure(source: 'cli'): ProviderRateLimits {
   return result('error', 'Cursor usage response could not be parsed', {
     usageMetadata: { failureKind: 'parse', source }
   })
 }
 
 /** Maps DashboardService JSON into Orca's Cursor {@link ProviderRateLimits}. */
-function mapDashboardResponse(
-  data: CursorDashboardResponse,
-  source: 'cli' | 'web'
-): ProviderRateLimits {
+function mapDashboardResponse(data: CursorDashboardResponse, source: 'cli'): ProviderRateLimits {
   const usage = data.planUsage
   const totalPercent = toFiniteNumber(usage?.totalPercentUsed)
   if (!usage || totalPercent === null) {
@@ -190,8 +179,7 @@ function mapDashboardResponse(
 export async function fetchCursorRateLimits(
   options: { signal?: AbortSignal; authReadResult?: CursorAuthReadResult } = {}
 ): Promise<ProviderRateLimits> {
-  const authResult =
-    options.authReadResult ?? (await readCursorAuthSession({ signal: options.signal }))
+  const authResult = options.authReadResult ?? (await readCursorAuthSession())
   if (authResult.status === 'missing') {
     return result('unavailable', 'Not signed in to Cursor — run cursor-agent and sign in', {
       usageMetadata: { failureKind: 'missing-credentials', source: 'cli' }
@@ -203,7 +191,7 @@ export async function fetchCursorRateLimits(
     })
   }
 
-  const source = toUsageMetadataSource(authResult.source)
+  const { source } = authResult
 
   try {
     const requestSignal = options.signal

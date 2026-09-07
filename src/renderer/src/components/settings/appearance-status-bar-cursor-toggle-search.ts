@@ -14,7 +14,7 @@ export function getCursorStatusBarToggleSearchEntry(): {
     title: translate('auto.components.settings.appearance.search.cursorUsageTitle', 'Cursor Usage'),
     description: translate(
       'auto.components.settings.appearance.search.cursorUsageDescription',
-      'Show Cursor monthly plan usage from cursor-agent or Cursor IDE sign-in.'
+      'Show Cursor monthly plan usage when signed in via cursor-agent.'
     ),
     keywords: [
       ...translateSearchKeyword(
@@ -33,7 +33,7 @@ export function getCursorStatusBarToggleSearchEntry(): {
     ],
     toggleDescription: translate(
       'settings.appearance.statusBar.cursorToggleDescription',
-      'Show Cursor monthly plan usage from cursor-agent or Cursor IDE sign-in.'
+      'Show Cursor monthly plan usage when signed in via cursor-agent.'
     )
   }
 }

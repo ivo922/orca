@@ -5,7 +5,7 @@ import { fetchGrokRateLimits } from '../grok-fetcher'
 import { readGrokAuthSession } from '../grok-auth'
 import { fetchCursorRateLimits } from '../cursor-fetcher'
 import { readCursorAuthSession } from '../cursor-auth'
-import { fetchMiniMaxRateLimits } from '../minimax-fetcher'
+import { fetchMiniMaxRateLimits } from '../minimax/minimax-fetcher'
 import { fetchOpenCodeGoRateLimits } from '../opencode-go-usage-fetcher'
 import { RateLimitServiceFetchPolicy } from './service-fetch-policy'
 import type {
